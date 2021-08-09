@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <services>
+        <defaults public="false"/>
+
+        <!--
+            service tags:
+                - dormilich_http_client.client_decoder          Decoders to add to the client
+                - dormilich_http_client.client_encoder          Encoders to add to the client
+                - dormilich_http_client.client_transformer      Transformers to add to the client
+                - dormilich_http_client.decode_success          Add transformer with success matcher
+                - dormilich_http_client.decode_error            Add transformer with error matcher
+                - dormilich_http_client.decode_client_error     Add transformer with error 4xx matcher
+                - dormilich_http_client.decode_server_error     Add transformer with error 5xx matcher
+          -->
+
+        <service id="dormilich_http_client.client" class="Dormilich\HttpClient\Client" shared="false" public="true">
+            <argument type="service" id="Psr\Http\Client\ClientInterface"/>
+            <argument type="service" id="Psr\Http\Message\RequestFactoryInterface"/>
+            <argument type="service" id="Psr\Http\Message\StreamFactoryInterface"/>
+        </service>
+
+        <service id="dormilich_http_client.error_decoder" class="Dormilich\HttpClient\Decoder\ErrorDecoder"/>
+
+        <service id="dormilich_http_client.dom_transformer" class="Dormilich\HttpClient\Transformer\DomTransformer"/>
+        <service id="dormilich_http_client.json_transformer" class="Dormilich\HttpClient\Transformer\JsonTransformer"/>
+        <service id="dormilich_http_client.text_transformer" class="Dormilich\HttpClient\Transformer\TextTransformer"/>
+        <service id="dormilich_http_client.url_transformer" class="Dormilich\HttpClient\Transformer\UrlTransformer">
+            <argument type="service" id="dormilich_http_client.query_parser"/>
+        </service>
+        <service id="dormilich_http_client.xml_transformer" class="Dormilich\HttpClient\Transformer\XmlTransformer"/>
+
+        <service id="dormilich_http_client.query_parser" alias="dormilich_http_client.php_query"/>
+
+        <service id="dormilich_http_client.nvp_query" class="Dormilich\HttpClient\Utility\NvpQuery"/>
+        <service id="dormilich_http_client.php_query" class="Dormilich\HttpClient\Utility\PhpQuery"/>
+
+        <service id="dormilich_http_client.status_success" class="Dormilich\HttpClient\Utility\StatusMatcher">
+            <factory class="Dormilich\HttpClient\Utility\StatusMatcher" method="success"/>
+        </service>
+        <service id="dormilich_http_client.status_error" class="Dormilich\HttpClient\Utility\StatusMatcher">
+            <factory class="Dormilich\HttpClient\Utility\StatusMatcher" method="error"/>
+        </service>
+        <service id="dormilich_http_client.status_client_error" class="Dormilich\HttpClient\Utility\StatusMatcher">
+            <factory class="Dormilich\HttpClient\Utility\StatusMatcher" method="clientError"/>
+        </service>
+        <service id="dormilich_http_client.status_server_error" class="Dormilich\HttpClient\Utility\StatusMatcher">
+            <factory class="Dormilich\HttpClient\Utility\StatusMatcher" method="serverError"/>
+        </service>
+
+        <!-- autowiring -->
+
+        <service id="Dormilich\HttpClient\Client" alias="dormilich_http_client.client"/>
+        <service id="Dormilich\HttpClient\Decoder\ErrorDecoder" alias="dormilich_http_client.error_decoder"/>
+        <service id="Dormilich\HttpClient\Transformer\DomTransformer" alias="dormilich_http_client.dom_transformer"/>
+        <service id="Dormilich\HttpClient\Transformer\JsonTransformer" alias="dormilich_http_client.json_transformer"/>
+        <service id="Dormilich\HttpClient\Transformer\TextTransformer" alias="dormilich_http_client.text_transformer"/>
+        <service id="Dormilich\HttpClient\Transformer\UrlTransformer" alias="dormilich_http_client.url_transformer"/>
+        <service id="Dormilich\HttpClient\Transformer\XmlTransformer" alias="dormilich_http_client.xml_transformer"/>
+
+    </services>
+</container>
