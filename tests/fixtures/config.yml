@@ -1,3 +1,3 @@
 dormilich_http_client:
-  transformer:
+  encoder:
     json: !php/const JSON_BIGINT_AS_STRING

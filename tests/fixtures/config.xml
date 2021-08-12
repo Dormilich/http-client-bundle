@@ -1,7 +1,8 @@
 <container xmlns="http://symfony.com/schema/dic/services" xmlns:dormilich-http-client="http://example.org/schema/dic/dormilich_http_client">
     <dormilich-http-client:config>
-        <dormilich-http-client:transformer>
+        <dormilich-http-client:encoder>
             <dormilich-http-client:url>nvp</dormilich-http-client:url>
-        </dormilich-http-client:transformer>
+        </dormilich-http-client:encoder>
     </dormilich-http-client:config>
+
 </container>

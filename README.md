@@ -1,6 +1,6 @@
 # http-client bundle
 
-Symfony 5 bundle for dormilich/http-client.
+Symfony 5 bundle for `dormilich/http-client`.
 
 ## Installation
 
@@ -10,6 +10,8 @@ This bundle requires Symfony 5 as well as a [PSR-17](https://www.php-fig.org/psr
 - [PSR-17 libraries](https://packagist.org/providers/psr/http-factory-implementation)
 - [PSR-18 libraries](https://packagist.org/providers/psr/http-client-implementation)
 
+However, it makes sense to use `symfony/http-client` as PSR-18 implementation in a Symfony project.
+
 You can then install this bundle via composer:
 ```
 composer require dormilich/http-client-bundle
@@ -17,22 +19,24 @@ composer require dormilich/http-client-bundle
 
 ## Configuration
 
-The configuration allows the JSON- and URL-transformer to be set up.
+The configuration allows the predefined JSON- and URL-transformers to be set up. By default, the
+JSON-transformers are set up without options and the URL-transformers with the `php` strategy.
 
-The JSON-transformer accepts `JSON_*` constants as constructor argument. They can be added using
-the `transformer.json` key. The URL-transformer can be configured with two encoding strategies,
-`php` (native PHP parsing strategy, used for populating `$_GET` and `$_POST`) and `nvp` (a strategy
-that uses `name=value` pairs) using the  `transformer.url` key.
+The JSON-encoder/decoder accepts `JSON_*` constants as constructor argument. They can be added
+using the `encoder.json`/`decoder.json` key.
 
-By default, the JSON-transformer is set up without options and the URL-transformer with the `php`
-strategy.
+The URL-encoder/decoder can be configured with two encoding strategies, `php` (native PHP parsing
+strategy, used for populating `$_GET` and `$_POST`) and `nvp` (a strategy that uses `name=value`
+pairs) using the `encoder.url`/`decoder.url` key.
 
 Example:
 ```yaml
 # config/packages/dormilich_http_client.yaml
 dormilich_http_client:
-  transformer:
-    json: !php/const JSON_BIGINT_AS_STRING
+  encoder:
+    url: php
+  decoder:
+    json: !php/const JSON_OBJECT_AS_ARRAY
 ```
 
 ### Tagging
@@ -41,17 +45,7 @@ The bundle allows the HTTP client to be configured in `services.yaml` using serv
 
 - `dormilich_http_client.client_decoder`: Add tagged decoder to the client
 - `dormilich_http_client.client_encoder`: Add tagged encoder to the client
-- `dormilich_http_client.client_transformer`: Add tagged transformer to the client
-
-Transformers can have additional tags that define for which response status codes the transformer
-is executed.
-
-- `dormilich_http_client.decode_success`: Only decode successful (2xx) responses
-- `dormilich_http_client.decode_error`: Only decode error (>= 400) responses
-- `dormilich_http_client.decode_client_error`: Only decode error (4xx) responses
-- `dormilich_http_client.decode_server_error`: Only decode error (5xx) responses
-
-Note: These status code tags have no effect on their own.
+- `dormilich_http_client.client_transformer`: Add tagged data transformer/encoder/decoder to the client
 
 Examples:
 ```yaml
@@ -62,9 +56,7 @@ Dormilich\HttpClient\Decoder\ErrorDecoder:
 ```
 ```yaml
 # encode JSON objects
-# decode successful JSON responses
-Dormilich\HttpClient\Transformer\JsonTransformer:
+Dormilich\HttpClient\Transformer\JsonEncoder:
     tags:
         - dormilich_http_client.client_transformer
-        - dormilich_http_client.decode_success
 ```

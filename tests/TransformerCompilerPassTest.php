@@ -38,47 +38,4 @@ class TransformerCompilerPassTest extends AbstractCompilerPassTestCase
             [new Reference('transformer')]
         );
     }
-
-    /**
-     * @test
-     */
-    public function ignore_missing_status_matcher_service()
-    {
-        $this->setDefinition('dormilich_http_client.client', new Definition());
-
-        $transformer = new Definition();
-        $transformer->addTag('dormilich_http_client.client_transformer');
-        $transformer->addTag('dormilich_http_client.decode_success');
-        $this->setDefinition('transformer', $transformer);
-
-        $this->compile();
-
-        $this->assertContainerBuilderHasServiceDefinitionWithMethodCall(
-            'dormilich_http_client.client',
-            'addTransformer',
-            [new Reference('transformer')]
-        );
-    }
-
-    /**
-     * @test
-     */
-    public function add_transformer_with_status_matcher()
-    {
-        $this->setDefinition('dormilich_http_client.client', new Definition());
-        $this->setDefinition('dormilich_http_client.status_success', new Definition());
-
-        $transformer = new Definition();
-        $transformer->addTag('dormilich_http_client.client_transformer');
-        $transformer->addTag('dormilich_http_client.decode_success');
-        $this->setDefinition('transformer', $transformer);
-
-        $this->compile();
-
-        $this->assertContainerBuilderHasServiceDefinitionWithMethodCall(
-            'dormilich_http_client.client',
-            'addTransformer',
-            [new Reference('transformer'), new Reference('dormilich_http_client.status_success')]
-        );
-    }
 }

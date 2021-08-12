@@ -16,8 +16,9 @@ class DormilichHttpClientExtension extends ConfigurableExtension
     {
         $this->loadDefinitions($container);
 
-        $this->configureJsonTransformer($mergedConfig['transformer'], $container);
-        $this->configureUrlTransformer($mergedConfig['transformer'], $container);
+        $this->configureJsonTransformers($mergedConfig, $container);
+        $this->configureUrlTransformer('encoder', $mergedConfig, $container);
+        $this->configureUrlTransformer('decoder', $mergedConfig, $container);
     }
 
     private function loadDefinitions(ContainerBuilder $container): void
@@ -26,18 +27,22 @@ class DormilichHttpClientExtension extends ConfigurableExtension
         $loader->load('services.xml');
     }
 
-    private function configureJsonTransformer(array $config, ContainerBuilder $container): void
+    private function configureJsonTransformers(array $config, ContainerBuilder $container): void
     {
-        $definition = $container->getDefinition('dormilich_http_client.json_transformer');
-        $definition->setArgument(0, $config['json']);
+        $encoder = $container->getDefinition('dormilich_http_client.json_encoder');
+        $encoder->setArgument(0, $config['encoder']['json']);
+
+        $decoder = $container->getDefinition('dormilich_http_client.json_decoder');
+        $decoder->setArgument(0, $config['decoder']['json']);
     }
 
-    private function configureUrlTransformer(array $config, ContainerBuilder $container): void
+    private function configureUrlTransformer(string $type, array $config, ContainerBuilder $container): void
     {
-        if ($type = $config['url']) {
-            $alias = "dormilich_http_client.{$type}_query";
-            if ($container->has($alias)) {
-                $container->setAlias('dormilich_http_client.query_parser', $alias);
+        if ($value = $config[$type]['url']) {
+            $alias = "dormilich_http_client.{$value}_query";
+            $service = "dormilich_http_client.query_{$type}";
+            if ($container->has($alias) and $container->has($service)) {
+                $container->setAlias($service, $alias);
             }
         }
     }

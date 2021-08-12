@@ -4,8 +4,12 @@ use Dormilich\Bundle\HttpClientBundle\DependencyInjection\DormilichHttpClientExt
 use Dormilich\HttpClient\Client;
 use Dormilich\HttpClient\Decoder\ErrorDecoder;
 use Dormilich\HttpClient\Transformer\DomTransformer;
+use Dormilich\HttpClient\Transformer\JsonDecoder;
+use Dormilich\HttpClient\Transformer\JsonEncoder;
 use Dormilich\HttpClient\Transformer\JsonTransformer;
 use Dormilich\HttpClient\Transformer\TextTransformer;
+use Dormilich\HttpClient\Transformer\UrlDecoder;
+use Dormilich\HttpClient\Transformer\UrlEncoder;
 use Dormilich\HttpClient\Transformer\UrlTransformer;
 use Dormilich\HttpClient\Transformer\XmlTransformer;
 use Dormilich\HttpClient\Utility\NvpQuery;
@@ -39,19 +43,6 @@ class HttpClientExtensionTest extends AbstractExtensionTestCase
     /**
      * @test
      */
-    public function load_status_matcher_instances()
-    {
-        $this->load();
-
-        $this->assertContainerBuilderHasService('dormilich_http_client.status_success', StatusMatcher::class);
-        $this->assertContainerBuilderHasService('dormilich_http_client.status_error', StatusMatcher::class);
-        $this->assertContainerBuilderHasService('dormilich_http_client.status_client_error', StatusMatcher::class);
-        $this->assertContainerBuilderHasService('dormilich_http_client.status_server_error', StatusMatcher::class);
-    }
-
-    /**
-     * @test
-     */
     public function load_query_parser()
     {
         $this->load();
@@ -70,9 +61,11 @@ class HttpClientExtensionTest extends AbstractExtensionTestCase
         $this->assertContainerBuilderHasAlias(Client::class, 'dormilich_http_client.client');
         $this->assertContainerBuilderHasAlias(ErrorDecoder::class, 'dormilich_http_client.error_decoder');
         $this->assertContainerBuilderHasAlias(DomTransformer::class, 'dormilich_http_client.dom_transformer');
-        $this->assertContainerBuilderHasAlias(JsonTransformer::class, 'dormilich_http_client.json_transformer');
+        $this->assertContainerBuilderHasAlias(JsonDecoder::class, 'dormilich_http_client.json_decoder');
+        $this->assertContainerBuilderHasAlias(JsonEncoder::class, 'dormilich_http_client.json_encoder');
         $this->assertContainerBuilderHasAlias(TextTransformer::class, 'dormilich_http_client.text_transformer');
-        $this->assertContainerBuilderHasAlias(UrlTransformer::class, 'dormilich_http_client.url_transformer');
+        $this->assertContainerBuilderHasAlias(UrlDecoder::class, 'dormilich_http_client.url_decoder');
+        $this->assertContainerBuilderHasAlias(UrlEncoder::class, 'dormilich_http_client.url_encoder');
         $this->assertContainerBuilderHasAlias(XmlTransformer::class, 'dormilich_http_client.xml_transformer');
     }
 
@@ -81,10 +74,10 @@ class HttpClientExtensionTest extends AbstractExtensionTestCase
      */
     public function set_json_transformer_options()
     {
-        $config['transformer']['json'] = JSON_BIGINT_AS_STRING;
+        $config['decoder']['json'] = JSON_BIGINT_AS_STRING;
         $this->load($config);
 
-        $this->assertContainerBuilderHasServiceDefinitionWithArgument('dormilich_http_client.json_transformer', 0, JSON_BIGINT_AS_STRING);
+        $this->assertContainerBuilderHasServiceDefinitionWithArgument('dormilich_http_client.json_decoder', 0, JSON_BIGINT_AS_STRING);
     }
 
     /**
@@ -94,9 +87,9 @@ class HttpClientExtensionTest extends AbstractExtensionTestCase
      */
     public function set_query_parser_for_url_transformer(string $value)
     {
-        $config['transformer']['url'] = $value;
+        $config['encoder']['url'] = $value;
         $this->load($config);
 
-        $this->assertContainerBuilderHasAlias('dormilich_http_client.query_parser', "dormilich_http_client.{$value}_query");
+        $this->assertContainerBuilderHasAlias('dormilich_http_client.query_encoder', "dormilich_http_client.{$value}_query");
     }
 }

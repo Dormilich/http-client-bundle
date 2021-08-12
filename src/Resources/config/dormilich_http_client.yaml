@@ -1,4 +1,7 @@
 dormilich_http_client:
-  transformer:
-    json: !php/const JSON_BIGINT_AS_STRING
+  encoder:
+    json: !php/const JSON_PRESERVE_ZERO_FRACTION
     url: php
+  decoder:
+    json: !php/const JSON_OBJECT_AS_ARRAY
+    url: nvp
