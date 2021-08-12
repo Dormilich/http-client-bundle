@@ -1,4 +1,11 @@
-<container xmlns="http://symfony.com/schema/dic/services" xmlns:dormilich-http-client="http://example.org/schema/dic/dormilich_http_client">
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xmlns:dormilich-http-client="http://example.org/schema/dic/dormilich_http_client"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services
+               https://symfony.com/schema/dic/services/services-1.0.xsd
+               http://example.org/schema/dic/dormilich_http_client
+               https://github.com/Dormilich/http-client-bundle/raw/main/src/Resources/config/schema/http-client-1.0.xsd">
+
     <dormilich-http-client:config>
         <dormilich-http-client:encoder>
             <dormilich-http-client:url>nvp</dormilich-http-client:url>
