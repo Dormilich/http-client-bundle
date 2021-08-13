@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-
 <xsd:schema xmlns="http://example.org/schema/dic/dormilich_http_client"
             xmlns:xsd="http://www.w3.org/2001/XMLSchema"
             targetNamespace="http://example.org/schema/dic/dormilich_http_client"

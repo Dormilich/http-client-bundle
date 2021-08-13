@@ -6,15 +6,12 @@ use Dormilich\HttpClient\Decoder\ErrorDecoder;
 use Dormilich\HttpClient\Transformer\DomTransformer;
 use Dormilich\HttpClient\Transformer\JsonDecoder;
 use Dormilich\HttpClient\Transformer\JsonEncoder;
-use Dormilich\HttpClient\Transformer\JsonTransformer;
 use Dormilich\HttpClient\Transformer\TextTransformer;
 use Dormilich\HttpClient\Transformer\UrlDecoder;
 use Dormilich\HttpClient\Transformer\UrlEncoder;
-use Dormilich\HttpClient\Transformer\UrlTransformer;
 use Dormilich\HttpClient\Transformer\XmlTransformer;
 use Dormilich\HttpClient\Utility\NvpQuery;
 use Dormilich\HttpClient\Utility\PhpQuery;
-use Dormilich\HttpClient\Utility\StatusMatcher;
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionTestCase;
 
 /**
